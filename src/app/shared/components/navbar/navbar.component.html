@@ -1,30 +1,30 @@
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg mb-3">
-      <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="#">
-          <img src="health_and_safety.png" alt="Gestión Medica" width="40" height="40" class="me-2">
+  <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" routerLink="/">
+          <img src="logo.png" alt="Gestión Medica" width="40" height="40" class="me-2">
           <div class="d-flex flex-column" style="line-height: 1;">
-            <span>Gestión</span>
-            <span>Medica</span>
+              <span>Gestión</span>
+              <span>Medica</span>
           </div>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
-        </button>
-      <!-- <div class="collapse navbar-collapse" id="navbarNav"> -->
-        <ul class="navbar-nav nav justify-content-center text-white">
+      </button>
+
+      <ul class="navbar-nav nav justify-content-center text-white">
           <li class="nav-item mx-2">
-            <a class="nav-link btn btn-secondary active" aria-current="page" href="#">Inicio</a>
+              <a class="nav-link btn btn-secondary" routerLink="home" routerLinkActive="active" aria-current="page">Inicio</a>
           </li>
           <li class="nav-item mx-2">
-            <a class="nav-link btn btn-secondary" href="#">Registro</a>
+              <a class="nav-link btn btn-secondary" routerLink="register" routerLinkActive="active">Registro</a>
           </li>
           <li class="nav-item mx-2">
-            <a class="nav-link btn btn-secondary" href="#">Iniciar sesión</a>
+              <a class="nav-link btn btn-secondary" routerLink="login" routerLinkActive="active">Iniciar sesión</a>
           </li>
           <li class="nav-item mx-2">
-            <a class="nav-link btn btn-secondary" href="#">Contacto</a>
+              <a class="nav-link btn btn-secondary" routerLink="contact" routerLinkActive="active">Contacto</a>
           </li>
-        </ul>
-      <!-- </div> -->
-    </div>
-  </nav>
+      </ul>
+  </div>
+</nav>

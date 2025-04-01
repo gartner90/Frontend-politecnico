@@ -4,6 +4,11 @@ import { RoutesEnum } from './shared/enums';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: RoutesEnum.HOME,
+    pathMatch: 'full'
+  },
+  {
     path: RoutesEnum.HOME,
     canMatch: [noAuthGuard],
     loadComponent: () =>
