@@ -1,5 +1,5 @@
 export enum RoutesEnum {
-  HOME = '',
+  HOME = 'home',
   REGISTER = 'register',
   LOGIN = 'login',
   CONTACT = 'contact',
