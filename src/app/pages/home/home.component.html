@@ -17,7 +17,7 @@
         <div class="col-md-6 d-flex align-items-center text-primary">
             <div class="card-body text-center">
                 <h1 class="card-title">Regístrate en nuestro sistema y agenda tu cita médica</h1>
-                <button type="button" class="btn btn-secondary text-white mt-3 w-auto">Registro</button>
+                <button type="button" class="btn btn-secondary text-white mt-3 w-auto" routerLink="/register">Registro</button>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
                     <h5 class="card-title text-primary">{{ card.title }}</h5>
                 </div>
                 <img [src]="card.image" class="card-img-bottom img-fluid" alt="Imagen de {{ card.title }}"
-                    style="width: 100%; height: 180px; object-fit: contain;">
+                    style="width: 100%; height: 150px; object-fit: contain; margin-bottom: 20px;">
             </div>
         </div>
     </div>
