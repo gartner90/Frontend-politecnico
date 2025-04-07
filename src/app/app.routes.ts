@@ -3,11 +3,15 @@ import { AppointmentsComponent } from './admin/appointments/appointments.compone
 import { NewAppointmentComponent } from './views/admin/new-appointment/new-appointment.component';
 import { UsersComponent } from './views/admin/users/users.component';
 import { EditAppointmentComponent } from './views/admin/edit-appointment/edit-appointment.component';
+import { HomeComponent } from './pages/home/home.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'appointments',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
@@ -25,5 +29,21 @@ export const routes: Routes = [
   {
     path: 'users',
     component: UsersComponent
-  }
+  },
+  {
+    path: 'home',
+    component: HomeComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'contact',
+    component: ContactComponent
+  },
 ];
