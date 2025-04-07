@@ -8,19 +8,18 @@
           <span class="navbar-toggler-icon"></span>
       </button>
 
-      <ul class="navbar-nav nav justify-content-center text-white">
-          <li class="nav-item mx-2">
-              <a class="nav-link btn btn-secondary" routerLink="home" routerLinkActive="active" aria-current="page">Inicio</a>
-          </li>
-          <li class="nav-item mx-2">
-              <a class="nav-link btn btn-secondary" routerLink="register" routerLinkActive="active">Registro</a>
-          </li>
-          <li class="nav-item mx-2">
-              <a class="nav-link btn btn-secondary" routerLink="login" routerLinkActive="active">Iniciar sesión</a>
-          </li>
-          <li class="nav-item mx-2">
-              <a class="nav-link btn btn-secondary" routerLink="contact" routerLinkActive="active">Contacto</a>
-          </li>
+      <ul class="navbar-nav">
+        <li *ngFor="let item of menu" class="nav-item" (click)="handleMenuClick(item)">
+          <a
+            class="nav-link"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            (click)="item.route === '/logout' ? onLogout() : null"
+          >
+            <i class="bi" [ngClass]="'bi-' + item.icon"></i> {{ item.label }}
+          </a>
+        </li>
       </ul>
+      
   </div>
 </nav>
