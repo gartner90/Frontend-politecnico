@@ -1,33 +1,24 @@
-<div class="appointments-container">
-    <h2>Gestión de Citas</h2>
-  
-    <div class="appointment-actions">
-      <button class="btn-new">Nueva Cita</button>
-      <input type="text" placeholder="Buscar cita..." class="search-input">
+<div class="users-container">
+  <div class="header d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center gap-3">
+      <h2 class="text-primary mb-0">Gestión de Citas</h2>
+      <button (click)="handleNew()" class="btn btn-secondary text-white">Nueva Cita</button>
     </div>
-  
-    <table class="appointments-table">
-      <thead>
-        <tr>
-          <th>Paciente</th>
-          <th>Fecha</th>
-          <th>Hora</th>
-          <th>Especialidad</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Nicolás Miranda</td>
-          <td>2025-04-08</td>
-          <td>10:00 AM</td>
-          <td>Medicina General</td>
-          <td>
-            <button class="btn-edit">Editar</button>
-            <button class="btn-delete">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="user-info d-flex align-items-center gap-2">
+      <div class="text-end">
+        <div class="email">micorreo&#64;gmail.com</div>
+        <div class="role">Administrador</div>
+      </div>
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" height="80" alt="user" class="profile-img" />
+    </div>
   </div>
-  
+
+  <div class="table-wrapper">
+    <app-table
+      [columns]="columns"
+      [data]="appointments"
+      (edit)="handleEdit($event)"
+      (delete)="handleDelete($event)">
+    </app-table>
+  </div>
+</div>

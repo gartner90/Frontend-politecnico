@@ -1,12 +1,13 @@
+import { UsersComponent } from './admin/users/users.component';
 import { Routes } from '@angular/router';
 import { AppointmentsComponent } from './admin/appointments/appointments.component';
 import { NewAppointmentComponent } from './views/admin/new-appointment/new-appointment.component';
-import { UsersComponent } from './views/admin/users/users.component';
 import { EditAppointmentComponent } from './views/admin/edit-appointment/edit-appointment.component';
 import { HomeComponent } from './pages/home/home.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ContactComponent } from './pages/contact/contact.component';
+import { ProfileComponent } from './admin/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,10 @@ export const routes: Routes = [
   {
     path: 'users',
     component: UsersComponent
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent
   },
   {
     path: 'home',
