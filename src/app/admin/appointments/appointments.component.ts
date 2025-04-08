@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TableComponent } from '../../shared/components/table/table.component';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-appointments',
@@ -10,7 +11,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
   standalone: true,
 })
 export class AppointmentsComponent {
-
+  private readonly authService = inject(AuthService);
   
   columns = [
     { field: 'id', label: 'ID' },
@@ -38,6 +39,11 @@ export class AppointmentsComponent {
     { id: 14, date: '02 ABRIL 2025 - 11:30 AM', category: 'Odontología', patient: 'Lucas Moreno', doctor: 'Dra. María Pérez' },
     { id: 15, date: '02 ABRIL 2025 - 01:00 PM', category: 'Pediatría', patient: 'Isabela León', doctor: 'Dr. Julián Romero' }
   ];
+
+  protected readonly user = computed(() => {
+    const user = this.authService.userFromToken();
+    return { email: user?.email, rol: user?.rol }
+  });
   
 
   constructor(private readonly router: Router){}
