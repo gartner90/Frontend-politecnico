@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TableComponent } from '../../shared/components/table/table.component';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-users',
@@ -9,6 +10,7 @@ import { TableComponent } from '../../shared/components/table/table.component';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
+  private readonly authService = inject(AuthService);
 
   columns = [
     { field: 'id', label: 'ID' },
@@ -30,6 +32,11 @@ export class UsersComponent {
     { id: 9, email: 'pedro@mail.com', fullName: 'Pedro Ramirez', role: 'Medico', status: 'Active' },
     { id: 10, email: 'sofia@mail.com', fullName: 'Sofia Morales', role: 'Paciente', status: 'Inactive' }
   ];
+
+  protected readonly user = computed(() => {
+    const user = this.authService.userFromToken();
+    return { email: user?.email, rol: user?.rol }
+  });
 
   constructor(private readonly router: Router){}
 

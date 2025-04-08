@@ -61,7 +61,8 @@ export class ProfileComponent {
     }
 
     const newData = { ...authUser, ...form };
-    await this.profileService.updateUser(authUser.email, newData);
+    const success = await this.profileService.updateUser(authUser.email, newData);
+    if(success) this.authService.userFromToken.set(newData);
     this.isLoading.set(false);
   }
 }

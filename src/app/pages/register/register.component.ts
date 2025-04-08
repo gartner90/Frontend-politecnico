@@ -14,7 +14,7 @@ import {
 import { AuthService } from '../../services/auth/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { RolEnum, RoutesEnum } from '../../shared/enums';
+import { RolEnum, RoutesEnum, StatusEnum } from '../../shared/enums';
 
 @Component({
   selector: 'app-register',
@@ -57,7 +57,7 @@ export class RegisterComponent {
     }
 
     this.authService
-      .register({ ...form, rol: RolEnum.USER })
+      .register({ ...form, rol: RolEnum.USER, status: StatusEnum.ACTIVE })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

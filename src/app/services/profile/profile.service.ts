@@ -17,5 +17,7 @@ export class ProfileService {
     await firstValueFrom(
       this.simulateHttpService.post('/users', { ...data[index], ...form })
     );
+    localStorage.setItem('auth_user', JSON.stringify(form));
+    return true;
   }
 }
