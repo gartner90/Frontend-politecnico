@@ -4,20 +4,28 @@
         <!-- Columna del formulario -->
         <div class="col-md-5 d-flex flex-column justify-content-center px-5">
             <h2 class="text-primary fw-bold mb-4">Registro</h2>
-            <form>
+            <form [formGroup]="form" (submit)="onSubmit()">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre Completo:</label>
-                    <input type="text" class="form-control" id="name">
+                    <input formControlName="name" type="text" class="form-control" id="name">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo Electrónico:</label>
-                    <input type="text" class="form-control" id="email">
+                    <input formControlName="email" type="text" class="form-control" id="email">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password">
+                    <input formControlName="password" type="password" class="form-control" id="password">
                 </div>
-                <button type="submit" class="btn btn-secondary text-white mt-2">Registrarse</button>
+                <button type="submit" class="btn btn-secondary text-white mt-2" [disabled]="isLoading() || form.invalid">
+                    @if (isLoading()) {
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    } @else {
+                        Registrarse
+                    }
+                </button>
             </form>
         </div>
         <div class="col-md-7 d-none d-md-block text-center">

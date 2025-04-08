@@ -1,48 +1,177 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { TableComponent } from '../../shared/components/table/table.component';
+import { AuthService } from '../../services/auth/auth.service';
+import { RolEnum, StatusEnum } from '../../shared/enums';
+import {
+  FormsModule,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { UserService } from '../../services/users/user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IUser } from '../../shared/interfaces';
 
 @Component({
   selector: 'app-users',
-  imports: [TableComponent],
+  imports: [TableComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.scss'
+  styleUrl: './users.component.scss',
 })
-export class UsersComponent {
+export class UsersComponent implements OnInit {
+  @ViewChild('editBtn') public editBtn!: ElementRef<HTMLButtonElement>;
 
-  columns = [
+  @ViewChild('closeBtn') public closeBtn!: ElementRef<HTMLButtonElement>;
+
+  private readonly destroyRef = inject(DestroyRef);
+
+  private readonly formBuilder = inject(NonNullableFormBuilder);
+
+  private readonly authService = inject(AuthService);
+
+  private readonly userService = inject(UserService);
+
+  protected columns = [
     { field: 'id', label: 'ID' },
     { field: 'email', label: 'Email' },
-    { field: 'fullName', label: 'Full Name' },
-    { field: 'role', label: 'Role' },
-    { field: 'status', label: 'Status' }
+    { field: 'name', label: 'Full Name' },
+    { field: 'rol', label: 'Role' },
+    { field: 'status', label: 'Status' },
   ];
 
-  users = [
-    { id: 1, email: 'nmiranda@mail.com', fullName: 'Nicolás Miranda', role: 'Admin', status: 'Active' },
-    { id: 2, email: 'mgomez@mail.com', fullName: 'Maria Gomez', role: 'Paciente', status: 'Inactive' },
-    { id: 3, email: 'jlopez@mail.com', fullName: 'Juan Lopez', role: 'Medico', status: 'Active' },
-    { id: 4, email: 'lrodriguez@mail.com', fullName: 'Laura Rodriguez', role: 'Admin', status: 'Active' },
-    { id: 5, email: 'ccastro@mail.com', fullName: 'Carlos Castro', role: 'Paciente', status: 'Inactive' },
-    { id: 6, email: 'andrea@mail.com', fullName: 'Andrea Ruiz', role: 'Medico', status: 'Active' },
-    { id: 7, email: 'jtorres@mail.com', fullName: 'Javier Torres', role: 'Paciente', status: 'Active' },
-    { id: 8, email: 'vgarcia@mail.com', fullName: 'Valeria Garcia', role: 'Admin', status: 'Inactive' },
-    { id: 9, email: 'pedro@mail.com', fullName: 'Pedro Ramirez', role: 'Medico', status: 'Active' },
-    { id: 10, email: 'sofia@mail.com', fullName: 'Sofia Morales', role: 'Paciente', status: 'Inactive' }
-  ];
+  protected users: IUser[] = [];
 
-  constructor(private readonly router: Router){}
+  protected readonly user = computed(() => {
+    const user = this.authService.userFromToken();
+    return { email: user?.email, rol: user?.rol };
+  });
 
-  handleNew(){
-    console.log('New user:');
+  protected readonly rolOptions = computed(() => Object.values(RolEnum));
+
+  protected readonly statusOptions = computed(() => Object.values(StatusEnum));
+
+  protected readonly isEditing = signal(false);
+
+  protected readonly isLoading = signal(false);
+
+  protected readonly form;
+
+  private prevUserData?: IUser & { id: number };
+
+  constructor() {
+    this.form = this.formBuilder.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      rol: [RolEnum.USER, Validators.required],
+      status: [StatusEnum.ACTIVE, Validators.required],
+    });
   }
-  
-  handleEdit(user: any) {
-    console.log('Edit user:', user);
+
+  public ngOnInit(): void {
+    this.list();
   }
 
-  handleDelete(user: any) {
-    console.log('Delete user:', user);
+  @HostListener('show.bs.modal', ['$event'])
+  public onModalShow(event: Event) {
+    const button = (event as any).relatedTarget;
+    const value = button.getAttribute('data-bs-is-editing');
+    this.isEditing.set(value === '1');
   }
 
+  @HostListener('hidden.bs.modal')
+  public onModalHidden() {
+    this.form.reset();
+    this.prevUserData = undefined;
+  }
+
+  private list() {
+    this.isLoading.set(true);
+    this.userService
+      .list()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.users = [...response];
+          this.isLoading.set(false);
+        },
+      });
+  }
+
+  protected async save() {
+    this.isLoading.set(true);
+    const form = this.form.getRawValue();
+
+    const isUnique = await this.authService.isUniqueEmail(form.email);
+    if (!isUnique) {
+      this.form.controls.email.setErrors({ invalid: true });
+      this.isLoading.set(false);
+      alert('Ya hay un usuario con este email');
+      return;
+    }
+
+    this.userService
+      .create({ ...form })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          setTimeout(() => {
+            this.closeBtn.nativeElement.click();
+            this.list();
+          }, 10);
+        },
+      });
+  }
+
+  protected async edit() {
+    if (!this.prevUserData) return;
+    this.isLoading.set(true);
+    const form = this.form.getRawValue();
+
+    const isUnique = await this.authService.isUniqueEmail(form.email);
+    if (!isUnique && form.email !== this.prevUserData.email) {
+      this.form.controls.email.setErrors({ invalid: true });
+      this.isLoading.set(false);
+      alert('Ya hay un usuario con este email');
+      return;
+    }
+
+    await this.userService.update(form, this.prevUserData.id - 1);
+    this.isLoading.set(false);
+
+    setTimeout(() => {
+      this.closeBtn.nativeElement.click();
+      this.list();
+    }, 10);
+  }
+
+  protected handleEdit(user: any) {
+    this.prevUserData = user;
+    this.form.patchValue(user);
+    this.editBtn.nativeElement.click();
+  }
+
+  protected handleDelete(user: any) {
+    this.isLoading.set(true);
+    this.userService
+      .delete(user.id - 1)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          this.list();
+        },
+      });
+  }
 }

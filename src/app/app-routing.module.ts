@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AppointmentsComponent } from './admin/appointments/appointments.component';
+import { AppointmentsComponent } from './pages/appointments/appointments.component';
 import { NewAppointmentComponent } from './views/admin/new-appointment/new-appointment.component';
 import { EditAppointmentComponent } from './views/admin/edit-appointment/edit-appointment.component';
 import { UsersComponent } from './views/admin/users/users.component'; 

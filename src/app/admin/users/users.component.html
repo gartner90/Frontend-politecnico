@@ -2,24 +2,98 @@
     <div class="header d-flex justify-content-between align-items-center mb-3">
       <div class="d-flex align-items-center gap-3">
         <h2 class="text-primary mb-0">Usuarios</h2>
-        <button (click)="handleNew()" class="btn btn-secondary text-white">Nuevo</button>
+        <button class="btn btn-secondary text-white" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-is-editing="0">
+          Nuevo
+        </button>
       </div>
       <div class="user-info d-flex align-items-center gap-2">
         <div class="text-end">
-          <div class="email">micorreo&#64;gmail.com</div>
-          <div class="role">Administrador</div>
+          <div class="email">{{user().email}}</div>
+          <div class="role">{{user().rol}}</div>
         </div>
         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" height="80" alt="user" class="profile-img" />
       </div>
     </div>
   
     <div class="table-wrapper">
-      <app-table
-        [columns]="columns"
-        [data]="users"
-        (edit)="handleEdit($event)"
-        (delete)="handleDelete($event)">
-      </app-table>
+      @if (isLoading()) {
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      } @else {
+        <app-table
+          [columns]="columns"
+          [data]="users"
+          (edit)="handleEdit($event)"
+          (delete)="handleDelete($event)">
+        </app-table>
+      }
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="userModalLabel">
+          {{isEditing() ? 'Editar usuario' : 'Nuevo usuario'}}
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" [disabled]="isLoading()" #closeBtn></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="form">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre Completo:</label>
+            <input formControlName="name" type="text" class="form-control" id="name">
+          </div>
+          <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico:</label>
+              <input formControlName="email" type="text" class="form-control" id="email">
+          </div>
+          <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input formControlName="password" type="password" class="form-control" id="password">
+          </div>
+          <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-control" formControlName="rol" id="rol">
+              @for (item of rolOptions(); track $index) {
+                <option [value]="item">{{item}}</option>
+              }
+            </select>
+          </div>
+          @if (isEditing()) {
+            <div class="mb-3">
+              <label for="status" class="form-label">Estado</label>
+              <select class="form-control" formControlName="status" id="status">
+                @for (item of statusOptions(); track $index) {
+                  <option [value]="item">{{item}}</option>
+                }
+              </select>
+            </div>
+          }
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="isLoading()">
+          Cerrar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="isEditing() ? edit() : save()" [disabled]="isLoading() || form.invalid">
+          @if (isLoading()) {
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+          } @else {
+            Guardar
+          }
+        </button>
+      </div>
     </div>
   </div>
-  
+</div>
+
+<!-- Edit btn -->
+<button class="fade" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-is-editing="1" #editBtn style="cursor: default;">
+  Editar
+</button>
