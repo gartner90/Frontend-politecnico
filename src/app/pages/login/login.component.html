@@ -14,7 +14,15 @@
                     <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password">
                   </div>
                   <div *ngIf="error" class="text-danger">{{ error }}</div>
-                  <button type="submit" class="btn btn-secondary text-white mt-2">Entrar</button>
+                  <button type="submit" class="btn btn-secondary text-white mt-2">
+                    @if (isLoading()) {
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    } @else {
+                        Entrar
+                    }
+                  </button>
             </form>
         </div>
         <div class="col-md-7 d-none d-md-block text-center">
