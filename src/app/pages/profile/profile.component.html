@@ -5,23 +5,31 @@
       <div class="col-md-5 d-flex flex-column justify-content-center px-5">
         <h2 class="text-primary fw-bold mb-4">Mi Perfil</h2>
         
-        <form>
+        <form [formGroup]="form" (submit)="onSubmit()">
           <div class="mb-3">
             <label for="fullName" class="form-label">Nombre Completo</label>
-            <input type="text" id="fullName" name="fullName" class="form-control bg-light fw-bold">
+            <input formControlName="name" type="text" id="fullName" name="fullName" class="form-control bg-light fw-bold">
           </div>
   
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" name="email" class="form-control bg-light fw-bold">
+            <input formControlName="email" type="email" id="email" name="email" class="form-control bg-light fw-bold">
           </div>
   
           <div class="mb-3">
             <label for="password" class="form-label">Contraseña:</label>
-            <input type="password" id="password" name="password" class="form-control bg-light fw-bold">
+            <input formControlName="password" type="password" id="password" name="password" class="form-control bg-light fw-bold">
           </div>
   
-          <button type="submit" class="btn btn-secondary text-white mt-2">GUARDAR</button>
+          <button type="submit" class="btn btn-secondary text-white mt-2">
+            @if (isLoading()) {
+              <div class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Loading...</span>
+              </div>
+            } @else {
+              GUARDAR
+            }
+          </button>
         </form>
       </div>
   
