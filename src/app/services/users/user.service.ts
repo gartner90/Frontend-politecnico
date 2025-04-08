@@ -92,16 +92,14 @@ export class UserService {
   }
 
   list() {
-    return this.simulateHttpService
-      .get('/users')
-      .pipe(
-        map((users: IUser[]) =>
-          [...DEFAULT_DATA, ...users].map((user, index) => ({
-            ...user,
-            id: index + 1,
-          }))
-        )
-      );
+    return this.simulateHttpService.get('/users').pipe(
+      map((users: IUser[]) =>
+        [...DEFAULT_DATA, ...users].map((user, index) => ({
+          ...user,
+          id: index + 1,
+        }))
+      )
+    );
   }
 
   delete(index: number) {

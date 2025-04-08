@@ -11,6 +11,8 @@ export class TableComponent {
 
   @Input() columns: { field: string, label: string }[] = [];
   @Input() data: any[] = [];
+  @Input() showEdit: boolean = true;
+  @Input() showDelete: boolean = true;
 
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
