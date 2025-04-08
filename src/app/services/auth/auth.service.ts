@@ -1,6 +1,7 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { SimulateHttpService } from '../simulate-http/simulate-http.service';
+import { IUser } from '../../shared/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,18 @@ export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
+  public readonly userFromToken = signal<IUser | undefined>(undefined);
+
   constructor() {
     const token = localStorage.getItem('auth_token');
     this.isAuthenticatedSubject.next(!!token);
+    if(!token) return;
+    const user = localStorage.getItem('auth_user');
+    if(!user) {
+      this.logout();
+      return;
+    }
+    this.userFromToken.set(JSON.parse(user) as IUser);
   }
 
   login(token: string): void {
@@ -23,7 +33,9 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
     this.isAuthenticatedSubject.next(false);
+    this.userFromToken.set(undefined);
   }
 
   isLoggedIn(): boolean {
@@ -38,7 +50,11 @@ export class AuthService {
     const data = await firstValueFrom(this.simulateHttpService.get('/users'));
     const user = data.find((user: any) => user?.email === email);
     if(!user) return false;
-    return email === user.email && password === user.password;
+    const areValidCredentials = email === user.email && password === user.password;
+    if(!areValidCredentials) return false;
+    this.userFromToken.set(user);
+    localStorage.setItem('auth_user', JSON.stringify(user));
+    return true;
   }
 
   async isUniqueEmail(email: string) {
