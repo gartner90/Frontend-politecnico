@@ -24,6 +24,7 @@ import { RolEnum, RoutesEnum, StatusEnum } from '../../shared/enums';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
+  // Inyecciones de dependencias para el manejo del formulario, autenticación, y router
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly router = inject(Router);
@@ -37,13 +38,14 @@ export class RegisterComponent {
   protected isLoading = signal(false);
 
   constructor() {
+    // Inicializa el formulario con los campos necesarios y sus validaciones
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
   }
-
+  // Método que se ejecuta cuando el usuario envía el formulario
   protected async onSubmit() {
     this.isLoading.set(true);
     const form = this.form.getRawValue();
@@ -55,7 +57,7 @@ export class RegisterComponent {
       alert('Ya hay un usuario con este email');
       return;
     }
-
+     // Si todo es válido, realiza el registro del usuario
     this.authService
       .register({ ...form, rol: RolEnum.USER, status: StatusEnum.ACTIVE })
       .pipe(takeUntilDestroyed(this.destroyRef))

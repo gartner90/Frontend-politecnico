@@ -7,12 +7,13 @@ import { IAppointment } from '../../shared/interfaces';
   providedIn: 'root',
 })
 export class AppointmentService {
+  // Inyecta el servicio para simular las solicitudes HTTP
   private readonly simulateHttpService = inject(SimulateHttpService);
-
+  // Método para crear una nueva cita
   create(form: IAppointment) {
     return this.simulateHttpService.post('/appointments', form);
   }
-
+  // Método para actualizar una cita existente
   async update(form: IAppointment, index: number) {
     const data = await firstValueFrom(
       this.simulateHttpService.get('/appointments')
@@ -26,7 +27,7 @@ export class AppointmentService {
       })
     );
   }
-
+  // Método para listar todas las citas
   list() {
     return this.simulateHttpService.get('/appointments').pipe(
       map((appointments: IAppointment[]) =>
@@ -37,7 +38,7 @@ export class AppointmentService {
       )
     );
   }
-
+  // Método para eliminar una cita existente
   delete(index: number) {
     return this.simulateHttpService.delete('/appointments', index);
   }

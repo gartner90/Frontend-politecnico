@@ -1,26 +1,38 @@
 <div class="users-container">
+  <!-- Contenedor principal de usuarios -->
     <div class="header d-flex justify-content-between align-items-center mb-3">
+      <!-- Cabecera que contiene el título y botones de acción -->
       <div class="d-flex align-items-center gap-3">
+        <!-- Contenedor de la sección con el título "Usuarios" y botón para agregar un nuevo usuario -->
         <h2 class="text-primary mb-0">Usuarios</h2>
+        <!-- Título principal de la sección, en color primario -->
         <button class="btn btn-secondary text-white" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-is-editing="0">
           Nuevo
         </button>
+        <!-- Botón que abre el modal para crear un nuevo usuario, con una bandera para indicar que no es una edición -->
       </div>
       <div class="user-info d-flex align-items-center gap-2">
+        <!-- Sección que muestra la información del usuario logueado (email y rol) -->
         <div class="text-end">
+          <!-- Información del usuario a la derecha -->
           <div class="email">{{user().email}}</div>
+          <!-- Muestra el correo electrónico del usuario logueado -->
           <div class="role">{{user().rol}}</div>
+          <!-- Muestra el rol del usuario logueado -->
         </div>
         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" height="80" alt="user" class="profile-img" />
+        <!-- Imagen del usuario (icono de perfil) -->
       </div>
     </div>
   
     <div class="table-wrapper">
+      <!-- Contenedor de la tabla que muestra la lista de usuarios -->
       @if (isLoading()) {
         <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       } @else {
+        <!-- Si no se está cargando, muestra la tabla con los datos de los usuarios -->
         <app-table
           [columns]="columns"
           [data]="users"
@@ -31,7 +43,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal para agregar o editar usuarios -->
 <div class="modal fade" id="userModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -76,9 +88,11 @@
         </form>
       </div>
       <div class="modal-footer">
+        <!-- Botones de acción del modal -->
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="isLoading()">
           Cerrar
         </button>
+        <!-- Botón para cerrar el modal, deshabilitado mientras se está cargando -->
         <button type="button" class="btn btn-primary" (click)="isEditing() ? edit() : save()" [disabled]="isLoading() || form.invalid">
           @if (isLoading()) {
             <div class="spinner-border spinner-border-sm" role="status">
@@ -93,7 +107,7 @@
   </div>
 </div>
 
-<!-- Edit btn -->
+<!-- Botón de acción "Editar" que abre el modal en modo de edición -->
 <button class="fade" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-is-editing="1" #editBtn style="cursor: default;">
   Editar
 </button>

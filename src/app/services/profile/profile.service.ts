@@ -8,7 +8,7 @@ import { IUser } from '../../shared/interfaces';
 })
 export class ProfileService {
   private readonly simulateHttpService = inject(SimulateHttpService);
-
+  // Inyecta el servicio para simular solicitudes HTTP
   async updateUser(prevEmail: string, form: IUser) {
     const data = await firstValueFrom(this.simulateHttpService.get('/users'));
     const index = data.findIndex((user: any) => user?.email === prevEmail);
@@ -17,6 +17,7 @@ export class ProfileService {
     await firstValueFrom(
       this.simulateHttpService.post('/users', { ...data[index], ...form })
     );
+    // Actualiza los datos del usuario en el localStorage
     localStorage.setItem('auth_user', JSON.stringify(form));
     return true;
   }

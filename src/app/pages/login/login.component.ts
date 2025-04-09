@@ -12,7 +12,7 @@ import { NgIf } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent { 
-  
+  // Propiedades para almacenar el correo electrónico, la contraseña y los errores
   email: string = '';
   password: string = '';
   error: string | null = null;
@@ -23,7 +23,7 @@ export class LoginComponent {
     private readonly authService: AuthService, 
     private readonly router: Router
   ) {}
-
+  // Método que se ejecuta cuando el usuario intenta iniciar sesión
   async onLogin(): Promise<void> {
     this.isLoading.set(true);
     this.error = '';
@@ -36,11 +36,9 @@ export class LoginComponent {
     }
     this.isLoading.set(false);
   }
-
+  // Método para validar las credenciales con el servicio de autenticación
   async validateLogin(email: string, password: string) {
     const isValid = await this.authService.validateUserForLogin(email, password);
     return isValid;
   }
-  
-
 }

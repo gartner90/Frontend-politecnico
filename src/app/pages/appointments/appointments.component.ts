@@ -37,6 +37,8 @@ export class AppointmentsComponent implements OnInit {
 
   @ViewChild('closeBtn') public closeBtn!: ElementRef<HTMLButtonElement>;
 
+  // Dependencias inyectadas en el constructor
+
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly formBuilder = inject(NonNullableFormBuilder);
@@ -46,7 +48,7 @@ export class AppointmentsComponent implements OnInit {
   private readonly appointmentService = inject(AppointmentService);
 
   private readonly userService = inject(UserService);
-
+  // Definición de columnas de la tabla
   protected columns = [
     { field: 'id', label: 'ID' },
     { field: 'dateCreated', label: 'Fecha' },
@@ -54,11 +56,11 @@ export class AppointmentsComponent implements OnInit {
     { field: 'patient', label: 'Paciente' },
     { field: 'doctor', label: 'Doctor' },
   ];
-
+  // Inicialización de variables de estado
   protected appointments: IAppointment[] = [];
 
   protected doctors: string[] = [];
-
+  // Computed para obtener la información del usuario desde el AuthService
   protected readonly user = computed(() => {
     const user = this.authService.userFromToken();
     return { email: user?.email, rol: user?.rol };
@@ -83,13 +85,14 @@ export class AppointmentsComponent implements OnInit {
   private prevAppointmentData?: IAppointment & { id: number };
 
   constructor() {
+    // Creación del formulario con controles y validaciones
     this.form = this.formBuilder.group({
       dateCreated: [this.getCurrentDateTime(), Validators.required],
       category: [CategoryEnum.GENERAL, Validators.required],
       patient: ['', Validators.required],
       doctor: ['', Validators.required],
     });
-
+    // Efecto que se ejecuta cada vez que se cambia la información del usuario
     effect(() => {
       const user = this.authService.userFromToken();
       if (!user) return;
@@ -110,7 +113,7 @@ export class AppointmentsComponent implements OnInit {
     const value = button.getAttribute('data-bs-is-editing');
     this.isEditing.set(value === '1');
   }
-
+  // Manejo de eventos de Bootstrap para mostrar/ocultar el modal
   @HostListener('hidden.bs.modal')
   public onModalHidden() {
     const user = this.authService.userFromToken();
@@ -118,13 +121,13 @@ export class AppointmentsComponent implements OnInit {
     this.form.controls.patient.setValue(user!.name);
     this.prevAppointmentData = undefined;
   }
-
+  // Método para obtener la fecha y hora actual en el formato adecuado para un input 'datetime-local'
   private getCurrentDateTime(): string {
     const now = new Date();
     const tzOffset = now.getTimezoneOffset() * 60000;
     return new Date(now.getTime() - tzOffset).toISOString().slice(0, 16);
   }
-
+  // Método para cargar la lista de citas y usuarios
   private list() {
     this.isLoading.set(true);
     forkJoin({
@@ -156,7 +159,7 @@ export class AppointmentsComponent implements OnInit {
         },
       });
   }
-
+  // Método para guardar una nueva cita
   protected async save() {
     this.isLoading.set(true);
     const form = this.form.getRawValue();
@@ -173,7 +176,7 @@ export class AppointmentsComponent implements OnInit {
         },
       });
   }
-
+  // Método para editar una cita existente
   protected async edit() {
     if (!this.prevAppointmentData) return;
     this.isLoading.set(true);
@@ -187,13 +190,13 @@ export class AppointmentsComponent implements OnInit {
       this.list();
     }, 10);
   }
-
+  // Manejo del evento de edición de una cita (se carga la cita en el formulario)
   protected handleEdit(data: any) {
     this.prevAppointmentData = data;
     this.form.patchValue(data);
     this.editBtn.nativeElement.click();
   }
-
+  // Manejo del evento de eliminación de una cita
   protected handleDelete(data: any) {
     this.isLoading.set(true);
     this.appointmentService

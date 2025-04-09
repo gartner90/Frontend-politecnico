@@ -3,7 +3,7 @@ import { SimulateHttpService } from '../simulate-http/simulate-http.service';
 import { IUser } from '../../shared/interfaces';
 import { firstValueFrom, map } from 'rxjs';
 import { RolEnum, StatusEnum } from '../../shared/enums';
-
+// Define datos predeterminados de usuarios para simular la base de datos
 const DEFAULT_DATA: IUser[] = [
   {
     name: 'John Doe',
@@ -73,15 +73,15 @@ export class UserService {
     const defaultData = localStorage.getItem('/default-users');
     if (!defaultData) this.saveDefaultData();
   }
-
+  // Método privado para guardar los datos predeterminados en localStorage
   private saveDefaultData() {
     localStorage.setItem('/default-users', JSON.stringify(DEFAULT_DATA));
   }
-
+  // Método para crear un nuevo usuario, simula un POST utilizando SimulateHttpService
   create(form: IUser) {
     return this.simulateHttpService.post('/users', form);
   }
-
+  // Método para actualizar un usuario, simula un PUT (actualización) de un usuario
   async update(form: IUser, index: number) {
     const data = await firstValueFrom(this.simulateHttpService.get('/users'));
     if (index < 0) throw new Error('No se encontro el usuario');
@@ -90,7 +90,7 @@ export class UserService {
       this.simulateHttpService.post('/users', { ...data[index], ...form })
     );
   }
-
+   // Método para obtener la lista de usuarios, combinando los usuarios predeterminados y los obtenidos
   list() {
     return this.simulateHttpService.get('/users').pipe(
       map((users: IUser[]) =>
@@ -101,7 +101,7 @@ export class UserService {
       )
     );
   }
-
+  // Método para eliminar un usuario, simula un DELETE
   delete(index: number) {
     return this.simulateHttpService.delete('/users', index);
   }

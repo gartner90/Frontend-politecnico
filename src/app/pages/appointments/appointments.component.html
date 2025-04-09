@@ -1,13 +1,18 @@
-<div class="users-container">
+<!-- Contenedor principal para los usuarios -->
+ <div class="users-container">
+  <!-- Encabezado con el título y el botón de nueva cita -->
   <div class="header d-flex justify-content-between align-items-center mb-3">
     <div class="d-flex align-items-center gap-3">
+      <!-- Título y botón de nueva cita -->
       <h2 class="text-primary mb-0">Gestión de Citas</h2>
+      <!-- Condicional para mostrar el botón de nueva cita si el usuario tiene permisos para crear citas -->
       @if (canCreate()) {
         <button class="btn btn-secondary text-white" data-bs-toggle="modal" data-bs-target="#appointmentModal" data-bs-is-editing="0">
           Nueva Cita
         </button>
       }
     </div>
+    <!-- Información del usuario (correo y rol) y su foto de perfil -->
     <div class="user-info d-flex align-items-center gap-2">
       <div class="text-end">
         <div class="email">{{user().email}}</div>
@@ -16,13 +21,15 @@
       <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" height="80" alt="user" class="profile-img" />
     </div>
   </div>
-
+   <!-- Contenedor para la tabla de citas -->
   <div class="table-wrapper">
+    <!-- Condicional para mostrar un indicador de carga si los datos están siendo cargados -->
     @if (isLoading()) {
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     } @else {
+      <!-- Tabla de citas -->
       <app-table
         [columns]="columns"
         [data]="appointments"
@@ -35,16 +42,18 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal para crear o editar una cita -->
 <div class="modal fade" id="appointmentModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
+        <!-- El título cambia dependiendo de si estamos editando o creando una cita -->
         <h1 class="modal-title fs-5" id="appointmentModalLabel">
           {{isEditing() ? 'Editar cita' : 'Nueva cita'}}
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" [disabled]="isLoading()" #closeBtn></button>
       </div>
+      <!-- Cuerpo del modal con el formulario para crear/editar cita -->
       <div class="modal-body">
         <form [formGroup]="form">
           <div class="mb-3">
@@ -62,6 +71,7 @@
           <div class="mb-3">
             <label for="doctor" class="form-label">Doctor:</label>
             <select class="form-control" formControlName="doctor" id="doctor">
+              <!-- Se generan opciones para doctores desde el array 'doctors' -->
               @for (item of doctors; track $index) {
                 <option [value]="item">{{item}}</option>
               }
@@ -69,11 +79,13 @@
           </div>
         </form>
       </div>
+      <!-- Pie del modal con los botones -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="isLoading()">
           Cerrar
         </button>
         <button type="button" class="btn btn-primary" (click)="isEditing() ? edit() : save()" [disabled]="isLoading() || form.invalid">
+          <!-- Indicador de carga si está guardando -->
           @if (isLoading()) {
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -87,7 +99,7 @@
   </div>
 </div>
 
-<!-- Edit btn -->
+<!-- Botón de edición de cita -->
 <button class="fade" data-bs-toggle="modal" data-bs-target="#appointmentModal" data-bs-is-editing="1" #editBtn style="cursor: default;">
   Editar
 </button>

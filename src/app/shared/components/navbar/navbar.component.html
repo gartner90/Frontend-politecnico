@@ -1,13 +1,15 @@
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg mb-3">
-  <div class="container-fluid">
+    <!-- Contenedor principal de la barra de navegación -->
+    <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" routerLink="/">
           <img src="logo.png" alt="Gestión Medica" height="40" class="me-2">
       </a>
+      <!-- Botón que permite abrir o cerrar el menú en dispositivos pequeños -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
-
+      <!-- Lista de elementos del menú de navegación -->
       <ul class="navbar-nav">
         <li *ngFor="let item of menu" class="nav-item" (click)="handleMenuClick(item)">
           <a
@@ -20,6 +22,5 @@
           </a>
         </li>
       </ul>
-      
-  </div>
+    </div>
 </nav>

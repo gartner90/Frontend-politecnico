@@ -40,7 +40,7 @@ export class UsersComponent implements OnInit {
   private readonly authService = inject(AuthService);
 
   private readonly userService = inject(UserService);
-
+  // Definición de las columnas de la tabla de usuarios.
   protected columns = [
     { field: 'id', label: 'ID' },
     { field: 'email', label: 'Email' },
@@ -48,9 +48,9 @@ export class UsersComponent implements OnInit {
     { field: 'rol', label: 'Role' },
     { field: 'status', label: 'Status' },
   ];
-
+  // Array donde se almacenan los usuarios obtenidos del servicio.
   protected users: IUser[] = [];
-
+  // Computed property que obtiene información del usuario autenticado.
   protected readonly user = computed(() => {
     const user = this.authService.userFromToken();
     return { email: user?.email, rol: user?.rol };
@@ -69,6 +69,7 @@ export class UsersComponent implements OnInit {
   private prevUserData?: IUser & { id: number };
 
   constructor() {
+    // Definición del formulario reactivo con validaciones para cada campo.
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -77,24 +78,24 @@ export class UsersComponent implements OnInit {
       status: [StatusEnum.ACTIVE, Validators.required],
     });
   }
-
+  // Llama a la función list para cargar los usuarios cuando el componente se inicializa.
   public ngOnInit(): void {
     this.list();
   }
-
+  // Escucha el evento de apertura de un modal (Bootstrap).
   @HostListener('show.bs.modal', ['$event'])
   public onModalShow(event: Event) {
     const button = (event as any).relatedTarget;
     const value = button.getAttribute('data-bs-is-editing');
     this.isEditing.set(value === '1');
   }
-
+  // Escucha el evento de cierre del modal (Bootstrap).
   @HostListener('hidden.bs.modal')
   public onModalHidden() {
     this.form.reset();
     this.prevUserData = undefined;
   }
-
+  // Obtiene la lista de usuarios desde el servicio.
   private list() {
     this.isLoading.set(true);
     this.userService
@@ -107,7 +108,7 @@ export class UsersComponent implements OnInit {
         },
       });
   }
-
+  // Función para guardar un nuevo usuario.
   protected async save() {
     this.isLoading.set(true);
     const form = this.form.getRawValue();
@@ -119,7 +120,7 @@ export class UsersComponent implements OnInit {
       alert('Ya hay un usuario con este email');
       return;
     }
-
+    // Crea el nuevo usuario.
     this.userService
       .create({ ...form })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -133,7 +134,7 @@ export class UsersComponent implements OnInit {
         },
       });
   }
-
+  // Función para editar un usuario existente.
   protected async edit() {
     if (!this.prevUserData) return;
     this.isLoading.set(true);
@@ -155,13 +156,13 @@ export class UsersComponent implements OnInit {
       this.list();
     }, 10);
   }
-
+  // Maneja la acción de editar un usuario, cargando sus datos en el formulario.
   protected handleEdit(user: any) {
     this.prevUserData = user;
     this.form.patchValue(user);
     this.editBtn.nativeElement.click();
   }
-
+  // Maneja la acción de eliminar un usuario.
   protected handleDelete(user: any) {
     this.isLoading.set(true);
     this.userService

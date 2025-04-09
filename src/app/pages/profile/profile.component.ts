@@ -21,14 +21,11 @@ import { ProfileService } from '../../services/profile/profile.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent {
+  // Inyección de dependencias para el formulario, el servicio de autenticación y el servicio de perfil
   private readonly formBuilder = inject(NonNullableFormBuilder);
-
   private readonly authService = inject(AuthService);
-
   private readonly profileService = inject(ProfileService);
-
   protected readonly form;
-
   protected isLoading = signal(false);
 
   constructor() {
@@ -44,7 +41,7 @@ export class ProfileComponent {
       this.form.patchValue(user);
     });
   }
-
+  // Método que se ejecuta al enviar el formulario
   protected async onSubmit() {
     const authUser = this.authService.userFromToken();
     if (!authUser) throw new Error('No se encontro el usuario logueado');
