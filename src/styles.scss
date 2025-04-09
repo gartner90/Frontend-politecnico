@@ -1,5 +1,10 @@
-$primary: #074b92; 
-$secondary: #ff0066; 
+$primary: #074b92;
+$secondary: #ff0066;
 
 // Importa Bootstrap desde SCSS
 @import "bootstrap/scss/bootstrap";
+
+.navbar-nav .nav-link.active {
+  background-color: $secondary;
+  border-radius: 0.375rem;
+}

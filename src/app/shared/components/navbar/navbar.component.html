@@ -11,16 +11,18 @@
       </button>
       <!-- Lista de elementos del menú de navegación -->
       <ul class="navbar-nav">
-        <li *ngFor="let item of menu" class="nav-item" (click)="handleMenuClick(item)">
-          <a
-            class="nav-link"
-            [routerLink]="item.route"
-            routerLinkActive="active"
-            (click)="item.route === '/logout' ? onLogout() : null"
-          >
-            <i class="bi" [ngClass]="'bi-' + item.icon"></i> {{ item.label }}
-          </a>
-        </li>
+        @for (item of menu; track $index) {
+          <li class="nav-item" (click)="handleMenuClick(item)">
+            <a
+              class="nav-link"
+              [routerLink]="item.route"
+              [routerLinkActive]="$index < menu.length - 1 ? 'active' : ''"
+              (click)="item.route === '/logout' ? onLogout() : null"
+            >
+              <i class="bi" [ngClass]="'bi-' + item.icon"></i> {{ item.label }}
+            </a>
+          </li>
+        }
       </ul>
     </div>
 </nav>
